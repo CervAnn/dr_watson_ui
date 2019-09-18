@@ -3,7 +3,7 @@ export const messages = (state=[], action) => {
     case 'ADD_MESSAGE':
       return [...state, {message: action.message, isUser: action.isUser}]
     case 'CLEAR_MESSAGES':
-      return action.messages
+      return state = []
     default:
       return state;
   }

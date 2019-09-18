@@ -1,4 +1,4 @@
-import { createUser, removeUser, hasErrored, addMessage} from './index'
+import { createUser, hasErrored, addMessage, clearMessages} from './index'
 
 describe("Actions", () => {
   it("should have a type of CREATE_USER", () => {
@@ -16,22 +16,6 @@ describe("Actions", () => {
 
     expect(createUser(user)).toEqual(expectedAction);
   });
-
-  // it("should have a type of REMOVE_USER", () => {
-  //   let user = {
-  //     id:1568825356538,
-  //     firstName:"a",
-  //     lastName:"a",
-  //     feeling:"tired"
-  //   };
-
-  //   let expectedAction = {
-  //     type: "REMOVE_USER",
-  //     user
-  //   };
-
-  //   expect(removeUser(user)).toEqual(expectedAction);
-  // });
 
   it("should have a type of HAS_ERRORED", () => {
     let errorMsg = "Error Message"
@@ -54,5 +38,13 @@ describe("Actions", () => {
     };
 
     expect(addMessage(message)).toEqual(expectedAction);
+  });
+
+    it("should have a type of CLEAR_MESSAGES", () => {
+    let expectedAction = {
+      type: "CLEAR_MESSAGES",
+    };
+
+    expect(clearMessages()).toEqual(expectedAction);
   });
 });

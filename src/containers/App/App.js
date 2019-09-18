@@ -14,8 +14,7 @@ export class App extends Component {
   }
 
   clearMessages = () => {
-    let messages = []
-    this.props.clearMessages(messages)
+    this.props.clearMessages()
   }
 
   signOut = async () => {

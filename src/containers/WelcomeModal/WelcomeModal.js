@@ -23,13 +23,14 @@ export class WelcomeModal extends Component {
   handleSubmit = e => {
     const { firstName, lastName, feeling } = this.state;
     e.preventDefault();
-    this.props.createUser({
-      id: Date.now(),
-      firstName,
-      lastName,
-      feeling,
-    });
-    this.connectToChatBot();
+    if (firstName && lastName && feeling) {
+      this.props.createUser({
+        id: Date.now(),
+        firstName,
+        lastName,
+        feeling,
+      });
+      this.connectToChatBot();
   }
 
   connectToChatBot = async () => {
@@ -37,6 +38,7 @@ export class WelcomeModal extends Component {
       const firstMessage = await startConversation(this.state.feeling);
       this.props.addMessage(firstMessage.message, false);
     } catch({ message }) {
+      console.log("hi")
       this.props.hasErrored(message);
     }
   }

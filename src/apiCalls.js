@@ -1,13 +1,12 @@
-export const startConversation = async feeling => {
+export const startConversation = async input => {
   const url = 'https://drwatson-api.herokuapp.com/api/v1/start_session'
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ feeling })
+    body: JSON.stringify({ input })
   };
-
   const response = await fetch(url, options);
   if (!response.ok) {
     throw Error('Dr Watson is currently down.  Please try again later.')

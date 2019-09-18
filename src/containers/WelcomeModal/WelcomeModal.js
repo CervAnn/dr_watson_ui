@@ -21,7 +21,7 @@ export class WelcomeModal extends Component {
   }
 
   handleSubmit = e => {
-    const { firstName, lastName, feeling } = this.state;
+    const { firstName, lastName, feeling, error } = this.state;
     e.preventDefault();
     if (firstName && lastName && feeling) {
       this.props.createUser({
@@ -29,16 +29,20 @@ export class WelcomeModal extends Component {
         firstName,
         lastName,
         feeling,
-      });
+      })
+    } else {
+      this.setState({ error: "Please fill all inputs prior to submitting." })
+      console.log(this.state.error)
+    }
       this.connectToChatBot();
   }
 
   connectToChatBot = async () => {
+    
     try {
       const firstMessage = await startConversation(this.state.feeling);
       this.props.addMessage(firstMessage.message, false);
     } catch({ message }) {
-      console.log("hi")
       this.props.hasErrored(message);
     }
   }

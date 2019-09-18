@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { App, mapStateToProps, mapDispatchToProps } from './App';
-import { removeUser, hasErrored } from '../../actions';
+import { removeUser, hasErrored, addMessage} from '../../actions';
 import { endConversation } from '../../apiCalls';
 
 jest.mock('../../apiCalls');
@@ -9,6 +9,8 @@ jest.mock('../../apiCalls');
 describe('App component', () => {
   const mockRemoveUser = jest.fn();
   const mockHasErrored = jest.fn();
+  const mockAddMessage = jest.fn()
+  const mockClearMessages = jest.fn()
   let wrapper;
 
   beforeEach(() => {
@@ -23,6 +25,8 @@ describe('App component', () => {
         user={mockUser}
         removeUser={mockRemoveUser}
         hasErrored={mockHasErrored}
+        addMessage={mockAddMessage}
+        clearMessages= {mockClearMessages}
     />);
   });
 
@@ -35,17 +39,19 @@ describe('App component', () => {
       user={null}
       removeUser={mockRemoveUser}
       hasErrored={mockHasErrored}
+      addMessage={mockAddMessage}
+      clearMessages= {mockClearMessages}
     />);
 
     expect(wrapper).toMatchSnapshot();
   });
 
-
-  it('should call endConversation, and removeUser if someone signs out', async () => {
+  it('should call endConversation, removeUser, and clearMessages if someone signs out', async () => {
     await wrapper.instance().signOut();
 
     expect(endConversation).toHaveBeenCalled();
     expect(mockRemoveUser).toHaveBeenCalled();
+    expect(mockClearMessages).toHaveBeenCalled();
   });
 
   it('should call hasErrored if endCoversation does not resolve when a user signs out', async () => {
@@ -60,7 +66,7 @@ describe('App component', () => {
 });
 
 describe('mapStateToProps', () => {
-  it('should return an object with the user information', () => {
+  it('should return an object with the user and messages information', () => {
     const mockUser = {
       id: 1568665187737, 
       firstName: "Travis", 
@@ -68,16 +74,22 @@ describe('mapStateToProps', () => {
       feeling: "tired"
     };
 
-    const mockState = {
-      user: mockUser,
+    const mockMessages = [{
       messages: [{
         message: 'Hi there, my name is Dr. Watson. I understand that you have been feeling happy. That is super exciting to hear!',
         isUser: false,
       }],
+    }]
+
+    const mockState = {
+      user: mockUser,
+      messages: mockMessages,
       errorMsg: ''
     };
+
     const expected = {
-      user: mockUser
+      user: mockUser,
+      messages: mockMessages
     }
 
     const mappedProps = mapStateToProps(mockState);
@@ -103,6 +115,16 @@ describe('mapDispatchToProps', () => {
 
     const mappedProps = mapDispatchToProps(mockDispatch);
     mappedProps.hasErrored('fetch failed');
+
+    expect(mockDispatch).toHaveBeenCalledWith(actionToDispatch);
+  });
+
+  it('calls dispatch with addMessage action when addMessage is called', () => {
+    const mockDispatch = jest.fn();
+    const actionToDispatch = addMessage({message: "hey", isUser: false});
+
+    const mappedProps = mapDispatchToProps(mockDispatch);
+    mappedProps.addMessage({message: "hey", isUser: false});
 
     expect(mockDispatch).toHaveBeenCalledWith(actionToDispatch);
   });

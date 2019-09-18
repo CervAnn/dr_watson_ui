@@ -40,6 +40,7 @@ export class WelcomeModal extends Component {
     
     try {
       const firstMessage = await startConversation(this.state.feeling);
+     console.log("mess", firstMessage)
       this.props.addMessage(firstMessage.message, false);
     } catch({ message }) {
       console.log("hi")

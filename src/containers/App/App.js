@@ -10,11 +10,7 @@ import './App.css';
 
 export class App extends Component {
   addMessage = (message, isUser) => {
-    let newMessage = {
-      message,
-      isUser
-    }
-    this.props.addMessage(newMessage)
+    this.props.addMessage(message, isUser)
   }
 
   clearMessages = () => {

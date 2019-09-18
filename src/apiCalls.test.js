@@ -122,8 +122,16 @@ describe('postMessage', () => {
     expect(window.fetch).toHaveBeenCalledWith(url, options);
   });
 
-  it('should resolve with no errors', () => {
-    expect(postMessage(mockMessage)).resolves.toEqual(undefined)
+  it('should return a new response message (HAPPY)', () => {
+    expect(postMessage(mockMessage)).resolves.toEqual(mockResponse);
+  });
+
+  it('should return an error if promise rejects (SAD)', () => {
+    window.fetch = jest.fn().mockImplementation(() => {
+      return Promise.reject(Error('fetch failed.'))
+    });
+
+    expect(postMessage(mockMessage)).rejects.toEqual(Error('fetch failed.'))
   });
 
   it('should return an error (SAD)', () => {
@@ -133,14 +141,7 @@ describe('postMessage', () => {
       });
     });
 
-    expect(postMessage()).rejects.toEqual(Error('There was a problem ending the session.  Please close the application.'));
+    expect(postMessage(mockMessage)).rejects.toEqual(Error('Dr Watson is currently down.  Please try again later.'));
   });
 
-  it('should return an error if promise rejects (SAD)', () => {
-    window.fetch = jest.fn().mockImplementation(() => {
-      return Promise.reject(Error('fetch failed.'));
-    });
-
-    expect(postMessage()).rejects.toEqual(Error('fetch failed.'));
-  });
 });

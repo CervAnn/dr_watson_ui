@@ -1,11 +1,11 @@
-export const startConversation = async input => {
+export const startConversation = async feeling => {
   const url = 'https://drwatson-api.herokuapp.com/api/v1/start_session'
   const options = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ input })
+    body: JSON.stringify({ feeling })
   };
   const response = await fetch(url, options);
   if (!response.ok) {

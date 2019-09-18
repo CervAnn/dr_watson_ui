@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { createUser, hasErrored } from '../../actions'
-import { startConversation } from '../../apiCalls';
-import './WelcomeModal.css'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { createUser, hasErrored } from "../../actions";
+import { startConversation } from "../../apiCalls";
+import "./WelcomeModal.css";
 
 export class WelcomeModal extends Component {
   constructor() {
     super();
     this.state = {
-      firstName: '',
-      lastName: '',
-      feeling: '',
-      error: '',
-    }
+      firstName: "",
+      lastName: "",
+      feeling: "",
+      error: ""
+    };
   }
 
   handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value, error: '' });
-  }
+    this.setState({ [e.target.name]: e.target.value, error: "" });
+  };
 
   handleSubmit = e => {
     const { firstName, lastName, feeling } = this.state;
@@ -28,41 +28,40 @@ export class WelcomeModal extends Component {
         id: Date.now(),
         firstName,
         lastName,
-        feeling,
-      })
+        feeling
+      });
     } else {
-      this.setState({ error: "Please fill all inputs prior to submitting." })
+      this.setState({ error: "Please fill all inputs prior to submitting." });
     }
-      this.connectToChatBot();
-  }
+    this.connectToChatBot();
+  };
 
   connectToChatBot = async () => {
-    
     try {
       const firstMessage = await startConversation(this.state.feeling);
-     console.log("mess", firstMessage)
       this.props.addMessage(firstMessage.message, false);
-    } catch({ message }) {
-      console.log("hi")
+    } catch ({ message }) {
       this.props.hasErrored(message);
     }
-  }
+  };
 
   render() {
     const { firstName, lastName, feeling, error } = this.state;
     return (
       <form className="welcome-modal">
-        <legend>Welcome to Survey Bot!  Please enter your name.</legend>
+        <legend>Welcome to Survey Bot! Please enter your name.</legend>
         {error && <p className="error-msg">{error}</p>}
-        <label>First Name:
+        <label>
+          First Name:
           <input
             name="firstName"
             value={firstName}
             onChange={this.handleChange}
           />
         </label>
-        <label>Last Name:
-        <input
+        <label>
+          Last Name:
+          <input
             name="lastName"
             value={lastName}
             onChange={this.handleChange}
@@ -75,14 +74,16 @@ export class WelcomeModal extends Component {
           <option value="stressed">Stressed</option>
           <option value="frustrated">Frustrated</option>
         </select>
-        <button onClick={this.handleSubmit}>
-          Take 5 minutes to check in!
-        </button>
+        <button onClick={this.handleSubmit}>Take 5 minutes to check in!</button>
       </form>
-    )
+    );
   }
 }
 
-export const mapDispatchToProps = dispatch => bindActionCreators({ createUser, hasErrored }, dispatch)
+export const mapDispatchToProps = dispatch =>
+  bindActionCreators({ createUser, hasErrored }, dispatch);
 
-export default connect(null, mapDispatchToProps)(WelcomeModal);
+export default connect(
+  null,
+  mapDispatchToProps
+)(WelcomeModal);

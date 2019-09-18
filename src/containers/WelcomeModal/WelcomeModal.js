@@ -21,7 +21,7 @@ export class WelcomeModal extends Component {
   }
 
   handleSubmit = e => {
-    const { firstName, lastName, feeling, error } = this.state;
+    const { firstName, lastName, feeling } = this.state;
     e.preventDefault();
     if (firstName && lastName && feeling) {
       this.props.createUser({

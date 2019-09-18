@@ -32,7 +32,6 @@ export class WelcomeModal extends Component {
       })
     } else {
       this.setState({ error: "Please fill all inputs prior to submitting." })
-      console.log(this.state.error)
     }
       this.connectToChatBot();
   }

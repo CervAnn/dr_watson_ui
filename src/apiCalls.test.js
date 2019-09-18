@@ -91,3 +91,56 @@ describe('endConversation', () => {
     expect(endConversation()).rejects.toEqual(Error('fetch failed.'));
   });
 });
+
+describe('postMessage', () => {
+  const mockMessage = 'hey';
+  const mockResponse = {
+    message: "Hi there!"
+  };
+
+  beforeEach(() => {
+    window.fetch = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockResponse)
+      });
+    });
+  });
+
+  it('should call fetch with the correct url', () => {
+    const url = 'https://drwatson-api.herokuapp.com/api/message';
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ newMessage: mockMessage })
+    };
+
+    postMessage(mockMessage);
+
+    expect(window.fetch).toHaveBeenCalledWith(url, options);
+  });
+
+  it('should resolve with no errors', () => {
+    expect(postMessage(mockMessage)).resolves.toEqual(undefined)
+  });
+
+  it('should return an error (SAD)', () => {
+    window.fetch = jest.fn().mockImplementation(() => {
+      return Promise.resolve({
+        ok: false
+      });
+    });
+
+    expect(postMessage()).rejects.toEqual(Error('There was a problem ending the session.  Please close the application.'));
+  });
+
+  it('should return an error if promise rejects (SAD)', () => {
+    window.fetch = jest.fn().mockImplementation(() => {
+      return Promise.reject(Error('fetch failed.'));
+    });
+
+    expect(postMessage()).rejects.toEqual(Error('fetch failed.'));
+  });
+});
